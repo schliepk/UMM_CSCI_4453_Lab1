@@ -68,7 +68,10 @@ As you go through the exercises below, you may find the [references](#references
 ### Log into MariaDB
 
 1. Start by opening a terminal (ask if you need help with this step)
-2. Run the following command:<br> `mysql -u tempadmin -p --host=<host> `<br>I will provide the password and hostname in class. (That's a security measure)
+2. Run the following command:<br>`mysql -u tempadmin -p --host=<host>`
+   * As a security measure, I will provide the password and hostname in class or on the course LMS rather than posting them here.
+   * Replace `<host>` with the provided hostname. Make sure to remove the angle brackets.
+   * You'll be prompted for the password after you enter the `mysql` command; that's what the `-p` flag does.
 
 You are using the `mysql` client.  This is a typical command line interface. MOST commands are in a language called SQL and they need to end in a semicolon. Let's start simply:
 
