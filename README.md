@@ -33,15 +33,14 @@ SQL stands for **Structured Query Language**.  It is the language used to organi
 
 NoSQL is a broad term encompassing many types of databases that organize their data differently than SQL-style databases.  Some well known examples include mongoDB and Neo4J.  NoSQL databases give up consistency guarantees that an SQL DBMS can provide in exchange for improved scalability (which is why they are so popular for applications like Facebook).  There is much more variety in the way that a NoSQL database structures its data, but several are closely associated with structured data formats like XML or JSON.  
 
-We are going to spend about two-thirds of our time with the SQL DBMS known as MariaDB.  MariaDB is the continuation of the MySQL project.  It split from MySQL after Oracle acquired Sun Microsystems in 2009 (and MySQL along with Sun).  Many of the original MySQL developers are MariaDB developers.  You can read more about the [history of MySQL and MariaDB](http://www.slideshare.net/Codemotion/my-sql-mariadbstorycodemotion).  (If you are interested then focus on the history-- there are many technical details that won't make sense without some DBF background)
+We are going to spend about two-thirds of our time with the SQL DBMS known as SQL Server.  SQL Server is an Enterprise level database from Microsoft.
 
-We are going to focus on MariaDB because:
+We are going to focus on SQL Server because:
 
-  * It is Open Source, 
-  * actively developed, 
-  * free,
-  * powerful,
-  * and increasingly includes NoSQL support.  
+  * Enterprise Level, 
+  * Actively developed, 
+  * Student Development License,
+  * Powerful.  
 
 ### Relational Databases
 
@@ -61,68 +60,40 @@ The data is an abstraction of the TABLE.  Most RDBMS use the SQL language to
 
 The entire organizational system is secretely based around the ideas of SETS or ordered elements which we will explore in greater detail later.
 
-## MariaDB: a first pass
+## SQL Server: a first pass
 
 As you go through the exercises below, you may find the [references](#references) below useful.
 
 ### Log into MariaDB
 
-1. Start by opening a terminal (ask if you need help with this step)
-2. Run the following command:<br>`mysql -u tempadmin -p --host=<host>`
-   * As a security measure, I will provide the password and hostname in class or on the course LMS rather than posting them here.
-   * Replace `<host>` with the provided hostname. Make sure to remove the angle brackets.
-   * You'll be prompted for the password after you enter the `mysql` command; that's what the `-p` flag does.
+1. Start by logging into a Linux machine in either 2610 or 2650.
+2. Run the program 'Azure Data Studio'.
+3. Connect to the Server I give you and use the SQL Login credentials I give you the first day of class.
 
-You are using the `mysql` client.  This is a typical command line interface. MOST commands are in a language called SQL and they need to end in a semicolon. Let's start simply:
+You are using the `Azure Data Studio` client.  
 
 ### Poke around a bit
 
 Look at the databases in the system:
+Open a New Query window 
 
-```no-highlight
-show databases;
-```
-
-(go ahead--you'll want to be typing this as you read).
-
-On one metaphoric level, a database is like a folder in a file system, and you can change your default
-database with the `USE` command. Mariadb does NOT allow nesting one database within another so
-the metaphor breaks down pretty quickly. But it's still a handy way to think about it-- just pretend you can only go one-level deep. In a similar vein, the equivalent of `ls` (or `dir`) is `SHOW TABLES`.  You will get an error if you try to do this *without* selecting a database first (another way in which the metaphor fails).  Try the following:
-
-Change to the database 'test':
+Change to the database 'DBName':
+--WHere DBName is the name of your database, First Initial of first name and last name so Peter Smith would be PSmith.
 
 ```
-use test;
+use DBName;
 ```
 
 See what tables are in that database:
 
-```
-show tables;
-```
-Look at the contents of database inventory (MariaDB IS case sensitive when it comes to table names-- be
-careful):
+Look at the contents of Departments (SQL Server is NOT case sensitive when it comes to table names):
 
 ```
-select * from inventory;
+select * from Departments;
 ```
 
 Get a sense for the structure of that database:
 
-```
-describe inventory;
-```
-
-Spend a little time looking at the output of `describe` and see if you can guess what some of that means. We'll talk about most of those things as the course proceeds, but definitely feel free to ask questions (or search the Internet) if there are bits you'd like to know more about.
-
-MariaDB (and mySQL) have an administrative database known as `mysql`.  It contains most of the important information necessary for the DBMS to work correctly so I'm taking a risk by allowing a remote login that has the ability to modify these tables… be careful with what you type please.
-
-With that warning firmly in mind see if you can do the following:
-* Change to the database `mysql`,
-* look at the tables in that database, and
-* examine the structure of the `user` table.
-
-Now type the following:
 
 ```
 select user, host, password from user;
