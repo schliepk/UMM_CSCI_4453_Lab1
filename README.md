@@ -105,8 +105,8 @@ With that in mind, here's what I
 want you to do (or have already done):
 
 1. Create your schema (this should already be completed).  You will use this schema for all your Lab 1 work.
-1. Create a table called `test` with ONE column named `test_field`<BR>the data-type of `test_field` must be TEXT and you should insert your last name into the table.
-1. Create a table called `workers` with the following fields (all capital):
+1. Create a table called `test` (within your Lab01 schema) with ONE column named `test_field`<BR>the data-type of `test_field` must be TEXT and you should insert your last name into the table.
+1. Create a table called `workers` (within your Lab01 schema) with the following fields (all capital):
 
 Column Name | Description
 ------------|--------------
