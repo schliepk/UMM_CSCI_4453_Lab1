@@ -45,7 +45,7 @@ The entire organizational system is secretely based around the ideas of SETS or 
 
 As you go through the exercises below, you may find the [references](#references) below useful.
 
-### Log into MariaDB
+### Log into Azure Data Studio
 
 1. Start by logging into a Linux machine in either 2610 or 2650.
 2. Run the program 'Azure Data Studio'.
