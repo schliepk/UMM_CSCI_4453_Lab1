@@ -1,24 +1,5 @@
 # Lab 1
 
-## Table of Contents
-
-- [Lab 1](#lab-1)
-  - [Broad overview](#broad-overview)
-    - [Relational Databases](#relational-databases)
-  - [MariaDB: a first pass](#mariadb-a-first-pass)
-    - [Log into MariaDB](#log-into-mariadb)
-    - [Poke around a bit](#poke-around-a-bit)
-    - [Decide on a username](#decide-on-a-username)
-  - [Watch a video about MySQL users](#watch-a-video-about-mysql-users)
-  - [Create your user and database:](#create-your-user-and-database)
-    - [Making a database](#making-a-database)
-    - [Adjusting Privileges](#adjusting-privileges)
-  - [Log in with your new account](#log-in-with-your-new-account)
-    - [Setting your password](#setting-your-password)
-  - [Exercises](#exercises)
-  - [What to DO](#checklist-of-things-to-do)
-  - [References](#references)
-
 ## Broad overview
 
 A **database** may be defined as a structured set of data (more on what that might mean in later lessons).  
@@ -163,8 +144,10 @@ and Raphael have worked for a year and a half, and Rayburn has worked for 2 year
 Use these references for review and to learn some new things that you'll be needing:
 
   * data types:
-    [https://mariadb.com/kb/en/data-types]
+    [https://learn.microsoft.com/en-us/sql/t-sql/data-types/data-types-transact-sql?view=sql-server-ver16]
   * Nice intro to creating tables:
-    [https://www.digitalocean.com/community/tutorials/how-to-create-a-table-in-mysql-and-mariadb-on-an-ubuntu-cloud-server]
+    [https://learn.microsoft.com/en-us/sql/relational-databases/native-client-ole-db-tables-indexes/creating-sql-server-tables?view=sql-server-ver16]
   * Inserting data (contains more than you need right now):
-    [https://mariadb.com/kb/en/mariadb/how-to-quickly-insert-data-into-mariadb/]
+    [https://learn.microsoft.com/en-us/sql/relational-databases/native-client-ole-db-table-valued-parameters/inserting-data-into-table-valued-parameters?view=sql-server-ver16]
+  * SQL Server Documentation
+    [https://learn.microsoft.com/en-us/sql/sql-server/?view=sql-server-ver16]
