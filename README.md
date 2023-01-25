@@ -95,205 +95,36 @@ select * from Departments;
 Get a sense for the structure of that database:
 
 
-```
-select user, host, password from user;
-```
+### Create a Schema
 
-The user column contains (surprise) the username.  The host column contains the scope for that username, and the password column contains the encrypted password.  
-
-### Decide on a username
-
-You will need to pick a username to access the DBMS. This is the only thing you'll "turn in" separately; everything else will be graded from the database. You don't need to give me your password, but you'll want to keep it somewhere safe – I can change it if you lose it.
-
-You are going to use an administration accout to add yourself as a user and create a database for your in-class work.  You will need to be on campus in order to access or use MariaDB (either physically or via a VPN) for this purpose.  You will be able to provide access to your fellow students, or remove it.  Use your power wisely.
-
-## Watch a video about MySQL users
-
-Before doing anything else, watch the following video which explains a bit about how user accounts work on MySQL (and thus on MariaDB):
-
-<http://theurbanpenguin.com/wp/index.php/understanding-mysql-users/>
-
-Since most of your machines don't have audio... I'll play it on the projector (probably after showing you how to add a user)
-
-## Create your user and database:
-
-The video you watched introduces the commands `CREATE USER`, `DROP USER`, and `SET PASSWORD`. It also uses a
-convention for accessing a table in a database without having to set that database as your default with
-the `USE` command. It skips the `RENAME USER` command (which can be helpful).
-
-Let's start by seeing how to create your user with the following template as a guide:
+You will need to create a schema for Lab 1 (and a second schema we'll use in a bit called Lab01Tmp, everything else will be created from the database.
 
 ```
-CREATE USER <name> IDENTIFIED BY '<password>';
+CREATE SCHEMA Lab01;  
+GO
 ```
 
-For example, I might create the user `testy_pete` as follows:  `CREATE USER testy_pete IDENTIFIED BY 'let me in';`.  Do NOT add the word `PASSWORD` to the `CREATE USER` command-- that special word is used to indicate the presence of an encrypted password (this way you don't need to send an unencrypted password over an unsecure network channel).  The user `testy_pete` now exists.
-
-Go ahead and give it a go with the name that you will use for your user.  Your new user has two drawbacks:  
-
-1. It has very little in the way of privileges (barely enough to do *anything*)
-2. There is no control over the hosts from which the user can connect.
-
-Look at your user's privileges like this:
+Sometimes it may be necessary to remove a Schema in that instance use the following
 
 ```
-SHOW GRANTS FOR <name>;
+DROP SCHEMA <name>;
 ```
+Drop your Lab01Tmp schema.
 
-I see something like this:
+It is **very** common to use the keyword `DROP` to remove an object (a user, a database, a table, schema, etc).
 
-```
-+-----------------------------------------------------------------------------------------------------------+
-| Grants for testy_pete@%                                                                                   |
-+-----------------------------------------------------------------------------------------------------------+
-| GRANT USAGE ON *.* TO 'testy_pete'@'%' IDENTIFIED BY PASSWORD '*C05F45ADBF3C3B19D8B4B676A97CAA34DF0F2A7F' |
-+-----------------------------------------------------------------------------------------------------------+
-```
-
-Security in mySQL (and mariaDB) is managed through the use of scoped users and privileges.  Different privileges can be granted for users based upon their username AND the host from which they connect. The command I used to create `testy_pete`, could be written more explicitly as
-
-```
-CREATE USER testy_pete@'%' IDENTIFIED BY 'let me in';
-```
-
-In this construction the username is of the form `<name>@<host>`.  Wild cards can be used in both the `<name>` and the `<host>` side of things.  We are only going to discuss the use of '%' as a wild-card character in the host.
-
-If you are running your system on a private IP in the `192.168.1.x` range you could use `192.168.1.%` for your host when you create your user.  Every machine in the dungeon has an IP address of the form `146.57.33.x`, so if I only wanted `testy_pete` to be able to use the database from the dungeon I could create the account thus:
-
-```
-CREATE USER testy_pete@'146.57.33.%' IDENTIFIED BY 'let me in';
-```
-
-Please note the use of single quotes – backticks can be used as well:
-
-```
-CREATE USER testy_pete@`146.57.33.%` IDENTIFIED BY 'let me in';
-```
-
-In just a second you are going to remove the user you just created, and make a new one that can only log in from the dungeon.  Before that take a second look at `mysql.user` while you are still logged in as tempadmin:
-
-```
-select user, host, password from mysql.user;
-```
-
-(note the use of the `<database>.<table>` construction).
-
-Now remove your user from the system:
-
-```
-DROP USER <name>;
-```
-
-It is **very** common to use the keyword `DROP` to remove an object (a user, a database, a table, etc).
-
-Now that you have removed your unrestricted account, re-add it with the appropriate HOST designator to restrict access to users in the dungeon (I'll be checking the host **and** the presence of a password as part of your grade).
-
-Have a look at how the user database has changed:
-
-```
-select user, host, password from mysql.user;
-```
-
-### Making a database
-
-You create a database with the `CREATE DATABASE <database name>` command and you delete it with
-the `DROP DATABASE <database name>` command.
-
-Create a database for your personal use.  Use the same name as your username.  My command would look something like this:
-
-```
-CREATE DATABASE testy_pete;
-```
-
-You will use this in future labs.
-
-### Adjusting Privileges
-
-MariaDB controls what you can do through the use of **privileges**.  Privileges can be **granted** or **revoked** (much as users can be **created** or **dropped**).
-
-All of this information is stored in tables in the `mysql` database which means that you could
-manipulate those tables directly… don't! Messing things up could be catastrophic. There are commands
-for doing this sort of thing. You are mostly going to care about `GRANT` and `REVOKE`.
-
-There are MANY levels of access that are allowed. Most are fairly straightforward. Here are a few:
-
-* All: (everything except the ability to do grants of your own)
-* ALTER: ability to change a table's structure
-* CREATE: ability to create a table (but not add them)
-* CREATE USER: ability to create, remove, rename users AND the ability to revoke all privileges from a user (but not add them)
-* DROP: ability to remove a table
-* SELECT: ability to pull information from a table
-* INSERT: ability to add records to a table
-* DELETE: ability to remove records from a table
-* SHOW DATABASES: ability to use the command SHOW DATABASES and see ALL databases
-* UPDATE: ability to update
-* USAGE: counter-intuitively… no real rights to anything (I *THINK* it means they can still log-in)
-
-Before doing anything else, have a look at what your new account can do.  Try the equivalent of the following with your new account:
-
-```
-SHOW GRANTS for testy_pete;
-SHOW GRANTS for testy_pete@'146.57.33.%';
-```
-
-Your new username makes a few commands a bit more complicated.   See the difference?  You need to fully qualify your username.
-
-To provide access use `GRANT`.  The basic usage is 
-
-```
-GRANT <privs> ON <object> TO <user>
-```
-
-The privileges can be applied to all databases (`*.*`), to all tables in a database (`<db>.*`), or to specific tables (`<db>.<table>`). 
-
-The user can be scoped. So, for example
-
-```
-GRANT SELECT on test.A to 'dummy'@'192.%';
-```
-
-will give the user dummy the ability to extract information from table `A` in database `test` IF they are
-logged in from an IP address starting with 192. (NOTE: IPV6 can be accommodated by this convention
-too.) :warning: in mySQL the scoped user MUST have been previously created in order to grant the
-privileges. In MariaDB the user will be automagically created if it doesn't already exist… this means that
-the password for that scoped user might not be what you expect.
-
-You are going to want to give yourself full access to your new database.  Modify the following command:
-
-```
-GRANT ALL ON testy_pete.* TO testy_pete@'146.57.33.%' WITH GRANT OPTION;
-```
-
-The keywords `WITH GRANT OPTION` will allow you the ability to provide privileges to your fellow classmates.
-
-After you have given your new account appropriate access to your new database, you'll need to refresh the system:
-
-```
-FLUSH PRIVILEGES;
-```
-
-If you neglect this step you might not be able to use the new database from your new account.
-
-## Log in with your new account
-
-Give it a whirl.  Log out of the `tempadmin` account using `EXIT;`, and see if you can log in with your new account.
-
-### Setting your password
-You can use the following command to set your password once you are logged into MariaDB:
-
-> `SET PASSWORD = PASSWORD('cleartext password');`
+Now that you have removed your Lab01Tmp (I'll be checking the schema list as part of your grade so make sure you remove the Tmp one).
 
 ## Exercises
 
 I'm going to ask you to do a series of tasks that will probably require you to look a few things up
 online. I've included some references for this lab (down below), but in the future you'll want to figure out
-how to google your way to the exact format of a command and examples. In particular you are going to need to figure out how the `CREATE TABLE` and `INSERT` statements work.  You will also need to figure out a little bit about SQL data-types.  If you have any questions feel free to ask (I plan on providing a minilecture on the subject).  With that in mind, here's what I
+how to google (bing) your way to the exact format of a command and examples. In particular you are going to need to figure out how the `CREATE TABLE` and `INSERT` statements work.  You will also need to figure out a little bit about SQL data-types.  If you have any questions feel free to ask.  
+With that in mind, here's what I
 want you to do (or have already done):
 
-1. Create your database (this should already be completed).  You will use this database for all your work.
+1. Create your schema (this should already be completed).  You will use this schema for all your Lab 1 work.
 1. Create a table called `test` with ONE column named `test_field`<BR>the data-type of `test_field` must be TEXT and you should insert your last name into the table.
-1. Give the user <strike>`peter`</strike> `mcphee` full privileges to your database:<BR>`grant all on <name>.* to 'mcphee'@'%';` <strike>`grant all on <name>.* to 'peter'@'%';`</strike>
-1. Apply the password function to the string 'readyplayerone' (we'll go over the syntax of this in another lab):<BR>`select password('readyplayerone');`
 1. Create a table called `workers` with the following fields (all capital):
 
 Column Name | Description
@@ -324,9 +155,7 @@ and Raphael have worked for a year and a half, and Rayburn has worked for 2 year
 ## Checklist of things to do
 
 * [ ] Play around a bit, logged in as `temp_admin` (see above).
-* [ ] Watch the Video <http://theurbanpenguin.com/wp/index.php/understanding-mysql-users/>
-* [ ] Pick username, create the user, create your database, and give yourself privileges on your new database.
-* [ ] Submit your username as what you "turn in" for this lab.
+* [ ] Submit your schema name as what you "turn in" for this lab.
 * [ ] Do the Exercises above (the contents of your database will be used for grading).
 
 ## References
